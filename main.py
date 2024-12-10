@@ -1,22 +1,15 @@
 import streamlit as st
-import cv2
-from streamlit_webrtc import webrtc_streamer, WebRtcMode, VideoProcessorBase
+from PIL import Image
 
-# Custom video processor to resize the frame
-class VideoProcessor(VideoProcessorBase):
-    def recv(self, frame):
-        img = frame.to_ndarray(format="bgr24")
-        # Resize the image to 416x416
-        resized_img = cv2.resize(img, (416, 416))
-        return resized_img
+st.title("Camera Input with Streamlit")
 
-st.title("Webcam Stream with Streamlit")
+st.write("Capture an image using your camera!")
 
-# Stream the camera feed with frame resizing
-webrtc_streamer(
-    key="camera",
-    mode=WebRtcMode.SENDRECV,
-    media_stream_constraints={"video": True, "audio": False},
-    video_processor_factory=VideoProcessor,
-    async_processing=True,
-)
+# Camera input widget
+camera_image = st.camera_input("Take a picture")
+
+# Display the captured image
+if camera_image:
+    st.write("Here is your image:")
+    img = Image.open(camera_image)
+    st.image(img, caption="Captured Image", use_column_width=True)
