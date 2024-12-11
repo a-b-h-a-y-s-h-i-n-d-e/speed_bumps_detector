@@ -3,6 +3,10 @@ import numpy as np
 from model import inference
 
 
+st.set_page_config(page_title="Speed-Breaker-Detector",
+                   page_icon="./assets/favicon.png", layout="centered")
+
+
 hide_decoration_bar_style = '''
     <style>
     
