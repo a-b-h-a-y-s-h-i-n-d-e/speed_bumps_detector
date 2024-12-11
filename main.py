@@ -1,25 +1,21 @@
 import streamlit as st
 import numpy as np
-import cv2
-from streamlit_webrtc import webrtc_streamer, WebRtcMode, VideoTransformerBase
+from model import inference
 
-# Create a class to handle video frame transformations
-class VideoTransformer(VideoTransformerBase):
-    def transform(self, frame):
-        # Convert the frame to an OpenCV image (BGR format)
-        img = frame.to_ndarray(format="bgr24")
+def main():
+    st.title("Speed Breaker Detection 🛣️")
 
-        # Draw a rectangle on the image (you can adjust the coordinates and size)
-        start_point = (100, 100)  # top-left corner
-        end_point = (300, 300)    # bottom-right corner
-        color = (255, 0, 0)       # Rectangle color (Blue)
-        thickness = 5             # Thickness of the rectangle
-        img = cv2.rectangle(img, start_point, end_point, color, thickness)
+    # File uploader widget
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-        return img
+    if uploaded_file is not None:
+        
+        with st.spinner("This may take upto 20-30 seconds!"):
 
-# Streamlit UI
-st.title("Live Camera with Rectangle Overlay")
+            output_image = inference(uploaded_file)
 
-# Start the WebRTC stream and apply the transformation
-webrtc_streamer(key="example", mode=WebRtcMode.SENDRECV, video_transformer_factory=VideoTransformer)
+            st.image(output_image, caption="Processed Image", use_container_width=True)
+
+
+if __name__ == "__main__":
+    main()
